@@ -2,3 +2,6 @@ out
 build
 .gitignore
 README.md
+*.http
+obj
+*.csproj.user
