@@ -1,0 +1,6 @@
+FROM ...
+WORKDIR /app
+COPY . /app/
+RUN ...
+EXPOSE 80
+CMD [...]
