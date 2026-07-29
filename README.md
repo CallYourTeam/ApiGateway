@@ -1,2 +1,2 @@
-# Microservice-template
-A template for creating microservices
+# API Gateway
+API Gateway service
