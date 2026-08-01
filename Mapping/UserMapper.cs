@@ -1,5 +1,5 @@
 ﻿using ApiGateway.Models;
-using ApiGateway.Utils;
+using UtilsModule;
 
 namespace ApiGateway.Mapping
 {
@@ -22,9 +22,9 @@ namespace ApiGateway.Mapping
                 Email = grpcResponse.Email,
                 PasswordHash = grpcResponse.PasswordHash,
                 RegistrationDate = DateTime.Parse(grpcResponse.RegisterationDate),
-                Freinds = Util.StringToList(grpcResponse.Friends, Guid.Parse),
-                Groups = Util.StringToList(grpcResponse.Groups, Guid.Parse),
-                Chanels = Util.StringToList(grpcResponse.Chanels, Guid.Parse)
+                Freinds = Utils.StringToList(grpcResponse.Friends, Guid.Parse),
+                Groups = Utils.StringToList(grpcResponse.Groups, Guid.Parse),
+                Chanels = Utils.StringToList(grpcResponse.Chanels, Guid.Parse)
             };
         }
     }

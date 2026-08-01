@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KafkaModule\KafkaModule.csproj" />
+    <ProjectReference Include="..\UtilsModule\UtilsModule.csproj" />
   </ItemGroup>
 
   <ItemGroup>

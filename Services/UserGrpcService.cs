@@ -1,4 +1,4 @@
-﻿using ApiGateway.Utils;
+﻿using UtilsModule;
 
 namespace ApiGateway.Services
 {
@@ -30,9 +30,9 @@ namespace ApiGateway.Services
                 Login = login,
                 Email = email,
                 NewPassword = newPassword,
-                Friends = Util.ListToString(friends),
-                Groups = Util.ListToString(groups),
-                Chanels = Util.ListToString(chanels)
+                Friends = Utils.ListToString(friends),
+                Groups = Utils.ListToString(groups),
+                Chanels = Utils.ListToString(chanels)
             });
         }
     }
