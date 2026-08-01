@@ -1,32 +1,65 @@
+using ApiGateway.Mapping;
+using ApiGateway.Models;
+using ApiGateway.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API_Gateway.Controllers
+namespace ApiGateway.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class UserController : ControllerBase
+    [Route("user/[controller]")]
+    public class UserController(IUserGrpcService userService) : ControllerBase
     {
-        [HttpPost(Name = "user/reg")]
-        public async Task<IActionResult> RegisterNewUser()
+        private readonly IUserGrpcService _userService = userService;
+
+        [HttpPost(Name = "reg")]
+        public async Task<IActionResult> RegisterNewUser(UserRegistrationRequest request)
         {
+            var grcpResponse = await _userService.RegisterUserAsync(request.Login, request.Email, request.Password);
+
+            if (grcpResponse.Error.Length == 0)
+            {
+                return BadRequest(grcpResponse.Error);
+            }
+
+            return Ok(UserMapper.MapUserRegistrationResponse(grcpResponse));
+        }
+
+        [HttpGet(Name = "auth")]
+        public async Task<IActionResult> AuthenticateUser(UserAuthenticationRequest request)
+        {
+            var grpcResponse = await _userService.AuthenticateUserAsync(request.Login, request.Password);
+
+            if (grpcResponse.Error.Length == 0)
+            {
+                return BadRequest(grpcResponse.Error);
+            }
+
+            return Ok(UserMapper.MapUserAuthenticationResponse(grpcResponse));
+        }
+
+        [HttpPatch(Name = "update")]
+        public async Task<IActionResult> UpdateUser(UserUpdateRequest request)
+        {
+            var grpcResponse = await _userService.UpdateUserAsync(request.UserId, request.Password, request.Login, request.Email, request.NewPassword, request.Friends, request.Groups, request.Chanels);
+
+            if (grpcResponse.Error.Length == 0)
+            {
+                return BadRequest(grpcResponse.Error);
+            }
+
             return Ok();
         }
 
-        [HttpGet(Name = "user/auth")]
-        public async Task<IActionResult> AuthenticateUser()
+        [HttpDelete(Name = "delete")]
+        public async Task<IActionResult> DeleteUser(UserDeleteRequest request)
         {
-            return Ok();
-        }
+            var grpcResponse = await _userService.DeleteUserAsync(request.UserId, request.Password);
 
-        [HttpPatch(Name = "user/update")]
-        public async Task<IActionResult> UpdateUser()
-        {
-            return Ok();
-        }
+            if (grpcResponse.Error.Length == 0)
+            {
+                return BadRequest(grpcResponse.Error);
+            }
 
-        [HttpDelete(Name = "user/delete")]
-        public async Task<IActionResult> DeleteUser()
-        {
             return Ok();
         }
     }

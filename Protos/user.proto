@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option csharp_namespace = "ApiGateway";
+
+service UserGrpc {
+	rpc RegisterUser (RegisterUserGrpcRequest) returns (RegisterUserGrpcResponse);
+	rpc UpdateUser (UpdateUserGrpcRequest) returns (UpdateUserGrpcResponse);
+	rpc AuthenticationtUser (AuthenticationUserGrpcRequest) returns (AuthenticationUserGrpcResponse);
+	rpc DeleteUser (DeleteUserGrpcRequest) returns (DeleteUserGrpcResponse);
+}
+
+message RegisterUserGrpcRequest {
+	string login = 1;
+	string email = 2;
+	string password = 3;
+}
+
+message RegisterUserGrpcResponse {
+	string userId = 1;
+	string error = 2;
+}
+
+message UpdateUserGrpcRequest {
+	string userId = 1;
+	string password = 2;
+	string login = 3;
+	string email = 4;
+	string newPassword = 5;
+	string friends = 6;
+	string groups = 7;
+	string chanels = 8;
+}
+
+message UpdateUserGrpcResponse {
+	string error = 1;
+}
+
+message AuthenticationUserGrpcRequest {
+	string login = 1;
+	string password = 2;
+}
+
+message AuthenticationUserGrpcResponse {
+	string userId = 1;
+	string login = 2;
+	string email = 3;
+	string passwordHash = 4;
+	string registerationDate = 5;
+	string friends = 6;
+	string groups = 7;
+	string chanels = 8;
+	string error = 9;
+}
+
+message DeleteUserGrpcRequest {
+	string userId = 1;
+	string password = 2;
+}
+
+message DeleteUserGrpcResponse {
+	string error = 1;
+}

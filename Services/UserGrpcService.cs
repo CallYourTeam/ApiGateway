@@ -1,0 +1,39 @@
+﻿using ApiGateway.Utils;
+
+namespace ApiGateway.Services
+{
+    public class UserGrpcService(UserGrpc.UserGrpcClient client) : IUserGrpcService
+    {
+        private readonly UserGrpc.UserGrpcClient _client = client;
+
+        public async Task<AuthenticationUserGrpcResponse> AuthenticateUserAsync(string login, string password)
+        {
+            return await _client.AuthenticationtUserAsync(new AuthenticationUserGrpcRequest { Login = login, Password = password });
+        }
+
+        public async Task<DeleteUserGrpcResponse> DeleteUserAsync(Guid userId, string password)
+        {
+            return await _client.DeleteUserAsync(new DeleteUserGrpcRequest { UserId = userId.ToString(), Password = password });
+        }
+
+        public async Task<RegisterUserGrpcResponse> RegisterUserAsync(string login, string email, string password)
+        {
+            return await _client.RegisterUserAsync(new RegisterUserGrpcRequest { Login = login, Email = email, Password = password });
+        }
+
+        public async Task<UpdateUserGrpcResponse> UpdateUserAsync(Guid userId, string password, string login, string email, string newPassword, List<Guid> friends, List<Guid> groups, List<Guid> chanels)
+        {
+            return await _client.UpdateUserAsync(new UpdateUserGrpcRequest
+            {
+                UserId = userId.ToString(),
+                Password = password,
+                Login = login,
+                Email = email,
+                NewPassword = newPassword,
+                Friends = Util.ListToString(friends),
+                Groups = Util.ListToString(groups),
+                Chanels = Util.ListToString(chanels)
+            });
+        }
+    }
+}
