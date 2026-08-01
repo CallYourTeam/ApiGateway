@@ -1,0 +1,3 @@
+[submodule "UtilsModule"]
+    path = "../UtilsModule"
+    url = "git@github.com:CallYourTeam/UtilsModule.git"
