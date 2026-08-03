@@ -1,22 +1,22 @@
+using ApiGateway.Contracts;
 using ApiGateway.Mapping;
-using ApiGateway.Models;
 using ApiGateway.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.Controllers
 {
     [ApiController]
-    [Route("user/[controller]")]
+    [Route("user")]
     public class UserController(IUserGrpcService userService) : ControllerBase
     {
         private readonly IUserGrpcService _userService = userService;
 
-        [HttpPost(Name = "reg")]
+        [HttpPost("reg")]
         public async Task<IActionResult> RegisterNewUser(UserRegistrationRequest request)
         {
             var grcpResponse = await _userService.RegisterUserAsync(request.Login, request.Email, request.Password);
 
-            if (grcpResponse.Error.Length == 0)
+            if (grcpResponse.Error.Length != 0)
             {
                 return BadRequest(grcpResponse.Error);
             }
@@ -24,12 +24,12 @@ namespace ApiGateway.Controllers
             return Ok(UserMapper.MapUserRegistrationResponse(grcpResponse));
         }
 
-        [HttpGet(Name = "auth")]
-        public async Task<IActionResult> AuthenticateUser(UserAuthenticationRequest request)
+        [HttpGet("auth")]
+        public async Task<IActionResult> AuthenticateUser([FromQuery] string login, [FromQuery] string password)
         {
-            var grpcResponse = await _userService.AuthenticateUserAsync(request.Login, request.Password);
+            var grpcResponse = await _userService.AuthenticateUserAsync(login, password);
 
-            if (grpcResponse.Error.Length == 0)
+            if (grpcResponse.Error.Length != 0)
             {
                 return BadRequest(grpcResponse.Error);
             }
@@ -37,12 +37,12 @@ namespace ApiGateway.Controllers
             return Ok(UserMapper.MapUserAuthenticationResponse(grpcResponse));
         }
 
-        [HttpPatch(Name = "update")]
+        [HttpPatch("update")]
         public async Task<IActionResult> UpdateUser(UserUpdateRequest request)
         {
             var grpcResponse = await _userService.UpdateUserAsync(request.UserId, request.Password, request.Login, request.Email, request.NewPassword, request.Friends, request.Groups, request.Chanels);
 
-            if (grpcResponse.Error.Length == 0)
+            if (grpcResponse.Error.Length != 0)
             {
                 return BadRequest(grpcResponse.Error);
             }
@@ -50,12 +50,12 @@ namespace ApiGateway.Controllers
             return Ok();
         }
 
-        [HttpDelete(Name = "delete")]
-        public async Task<IActionResult> DeleteUser(UserDeleteRequest request)
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteUser([FromQuery] string userId, [FromQuery] string password)
         {
-            var grpcResponse = await _userService.DeleteUserAsync(request.UserId, request.Password);
+            var grpcResponse = await _userService.DeleteUserAsync(Guid.Parse(userId), password);
 
-            if (grpcResponse.Error.Length == 0)
+            if (grpcResponse.Error.Length != 0)
             {
                 return BadRequest(grpcResponse.Error);
             }

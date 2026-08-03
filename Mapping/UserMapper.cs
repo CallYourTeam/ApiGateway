@@ -1,4 +1,4 @@
-﻿using ApiGateway.Models;
+﻿using ApiGateway.Contracts;
 using UtilsModule;
 
 namespace ApiGateway.Mapping
@@ -7,25 +7,22 @@ namespace ApiGateway.Mapping
     {
         public static UserRegistrationResponse MapUserRegistrationResponse(RegisterUserGrpcResponse grpcResponse)
         {
-            return new UserRegistrationResponse
-            {
-                UserId = Guid.Parse(grpcResponse.UserId)
-            };
+            return new UserRegistrationResponse(Guid.Parse(grpcResponse.UserId));
         }
 
         public static UserAuthenticationResponse MapUserAuthenticationResponse(AuthenticationUserGrpcResponse grpcResponse)
         {
             return new UserAuthenticationResponse
-            {
-                UserId = Guid.Parse(grpcResponse.UserId),
-                Login = grpcResponse.Login,
-                Email = grpcResponse.Email,
-                PasswordHash = grpcResponse.PasswordHash,
-                RegistrationDate = DateTime.Parse(grpcResponse.RegisterationDate),
-                Freinds = Utils.StringToList(grpcResponse.Friends, Guid.Parse),
-                Groups = Utils.StringToList(grpcResponse.Groups, Guid.Parse),
-                Chanels = Utils.StringToList(grpcResponse.Chanels, Guid.Parse)
-            };
+            (
+                Guid.Parse(grpcResponse.UserId),
+                grpcResponse.Login,
+                grpcResponse.Email,
+                grpcResponse.PasswordHash,
+                DateTime.Parse(grpcResponse.RegisterationDate),
+                Utils.StringToList(grpcResponse.Friends, Guid.Parse),
+                Utils.StringToList(grpcResponse.Groups, Guid.Parse),
+                Utils.StringToList(grpcResponse.Chanels, Guid.Parse)
+            );
         }
     }
 }

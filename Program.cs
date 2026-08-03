@@ -1,17 +1,20 @@
-//using ApiGateway.Extensions;
-//using ApiGateway.Models;
-//using ApiGateway.Handlers;
-
 using ApiGateway;
 using ApiGateway.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
-//builder.Services.AddProducer<UserRegistrationRequest>(builder.Configuration.GetSection("Kafka:Producer:UserRegisterationRequest"));
-//builder.Services.AddConsumer<UserRegistrationResponse, UserRegistrationHandler>(builder.Configuration.GetSection("Kafka:Consumer:UserRegistrationReply"));
+builder.Services.AddControllers();
 
 builder.Services.AddGrpcClient<UserGrpc.UserGrpcClient>(options =>
 {
@@ -21,11 +24,6 @@ builder.Services.AddGrpcClient<UserGrpc.UserGrpcClient>(options =>
 builder.Services.AddScoped<IUserGrpcService, UserGrpcService>();
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

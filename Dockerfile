@@ -9,20 +9,21 @@ EXPOSE 81
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["API-Gateway.csproj", "."]
-RUN dotnet restore "./API-Gateway.csproj"
+COPY ["ApiGateway.csproj", "."]
+RUN dotnet restore "./ApiGateway.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "./API-Gateway.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./ApiGateway.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./API-Gateway.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./ApiGateway.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 EXPOSE 80
+EXPOSE 81
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "API-Gateway.dll"]
+ENTRYPOINT ["dotnet", "ApiGateway.dll"]
