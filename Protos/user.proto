@@ -22,13 +22,12 @@ message RegisterUserGrpcResponse {
 
 message UpdateUserGrpcRequest {
 	string userId = 1;
-	string password = 2;
-	string login = 3;
-	string email = 4;
-	string newPassword = 5;
-	string friends = 6;
-	string groups = 7;
-	string chanels = 8;
+	string login = 2;
+	string email = 3;
+	string password = 4;
+	string friends = 5;
+	string groups = 6;
+	string chanels = 7;
 }
 
 message UpdateUserGrpcResponse {
@@ -42,15 +41,21 @@ message AuthenticationUserGrpcRequest {
 
 message AuthenticationUserGrpcResponse {
 	string userId = 1;
-	string login = 2;
-	string email = 3;
-	string passwordHash = 4;
-	string registerationDate = 5;
-	string friends = 6;
-	string groups = 7;
-	string chanels = 8;
-	string error = 9;
+	string error = 2;
 }
+
+/*message GetUserGrpcRequest {
+	string login = 1;
+}
+
+message GetUserGrpcResponse {
+	string login = 1;
+	string registerationDate = 2;
+	string friends = 3;
+	string groups = 4;
+	string chanels = 5;
+	string error = 6;
+}*/
 
 message DeleteUserGrpcRequest {
 	string userId = 1;

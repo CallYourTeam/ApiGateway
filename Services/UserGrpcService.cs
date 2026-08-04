@@ -21,15 +21,14 @@ namespace ApiGateway.Services
             return await _client.RegisterUserAsync(new RegisterUserGrpcRequest { Login = login, Email = email, Password = password });
         }
 
-        public async Task<UpdateUserGrpcResponse> UpdateUserAsync(Guid userId, string password, string login, string email, string newPassword, List<Guid> friends, List<Guid> groups, List<Guid> chanels)
+        public async Task<UpdateUserGrpcResponse> UpdateUserAsync(Guid userId, string login, string email, string password, List<Guid> friends, List<Guid> groups, List<Guid> chanels)
         {
             return await _client.UpdateUserAsync(new UpdateUserGrpcRequest
             {
                 UserId = userId.ToString(),
-                Password = password,
                 Login = login,
                 Email = email,
-                NewPassword = newPassword,
+                Password = password,
                 Friends = Utils.ListToString(friends),
                 Groups = Utils.ListToString(groups),
                 Chanels = Utils.ListToString(chanels)

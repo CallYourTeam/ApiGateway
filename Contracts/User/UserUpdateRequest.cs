@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ApiGateway.Contracts
+namespace ApiGateway.Contracts.User
 {
-    public record UserAuthenticationResponse
+    public record UserUpdateRequest
     (
         [Required] Guid UserId,
         [Required] string Login,
         [Required] string Email,
-        [Required] string PasswordHash,
-        [Required] DateTime RegistrationDate,
-        [Required] List<Guid> Freinds,
+        [Required] string Password,
+        [Required] List<Guid> Friends,
         [Required] List<Guid> Groups,
         [Required] List<Guid> Chanels
     );

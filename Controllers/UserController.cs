@@ -1,27 +1,31 @@
-using ApiGateway.Contracts;
-using ApiGateway.Mapping;
+using ApiGateway.Contracts.User;
+using ApiGateway.Jwt;
 using ApiGateway.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.Controllers
 {
     [ApiController]
     [Route("user")]
-    public class UserController(IUserGrpcService userService) : ControllerBase
+    public class UserController(IUserGrpcService userService, IJwtProvider jwtProvider) : ControllerBase
     {
         private readonly IUserGrpcService _userService = userService;
+        private readonly IJwtProvider _jwtProvider = jwtProvider;
 
         [HttpPost("reg")]
-        public async Task<IActionResult> RegisterNewUser(UserRegistrationRequest request)
+        public async Task<IActionResult> RegisterNewUser([FromBody] UserRegistrationRequest request)
         {
-            var grcpResponse = await _userService.RegisterUserAsync(request.Login, request.Email, request.Password);
+            var grpcResponse = await _userService.RegisterUserAsync(request.Login, request.Email, request.Password);
 
-            if (grcpResponse.Error.Length != 0)
+            if (grpcResponse.Error.Length != 0)
             {
-                return BadRequest(grcpResponse.Error);
+                return BadRequest(grpcResponse.Error);
             }
 
-            return Ok(UserMapper.MapUserRegistrationResponse(grcpResponse));
+            var jwtToken = _jwtProvider.GenerateToken(Guid.Parse(grpcResponse.UserId));
+
+            return Ok(jwtToken);
         }
 
         [HttpGet("auth")]
@@ -34,13 +38,16 @@ namespace ApiGateway.Controllers
                 return BadRequest(grpcResponse.Error);
             }
 
-            return Ok(UserMapper.MapUserAuthenticationResponse(grpcResponse));
+            var jwtToken = _jwtProvider.GenerateToken(Guid.Parse(grpcResponse.UserId));
+
+            return Ok(jwtToken);
         }
 
-        [HttpPatch("update")]
-        public async Task<IActionResult> UpdateUser(UserUpdateRequest request)
+        [HttpPut("update")]
+        [Authorize]
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateRequest request)
         {
-            var grpcResponse = await _userService.UpdateUserAsync(request.UserId, request.Password, request.Login, request.Email, request.NewPassword, request.Friends, request.Groups, request.Chanels);
+            var grpcResponse = await _userService.UpdateUserAsync(request.UserId, request.Login, request.Email, request.Password, request.Friends, request.Groups, request.Chanels);
 
             if (grpcResponse.Error.Length != 0)
             {
@@ -51,6 +58,7 @@ namespace ApiGateway.Controllers
         }
 
         [HttpDelete("delete")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser([FromQuery] string userId, [FromQuery] string password)
         {
             var grpcResponse = await _userService.DeleteUserAsync(Guid.Parse(userId), password);
