@@ -5,7 +5,8 @@ option csharp_namespace = "ApiGateway";
 service UserGrpc {
 	rpc RegisterUser (RegisterUserGrpcRequest) returns (RegisterUserGrpcResponse);
 	rpc UpdateUser (UpdateUserGrpcRequest) returns (UpdateUserGrpcResponse);
-	rpc AuthenticationtUser (AuthenticationUserGrpcRequest) returns (AuthenticationUserGrpcResponse);
+	rpc AuthenticationUser (AuthenticationUserGrpcRequest) returns (AuthenticationUserGrpcResponse);
+	rpc GetUser (GetUserGrpcRequest) returns (GetUserGrpcResponse); 
 	rpc DeleteUser (DeleteUserGrpcRequest) returns (DeleteUserGrpcResponse);
 }
 
@@ -44,7 +45,7 @@ message AuthenticationUserGrpcResponse {
 	string error = 2;
 }
 
-/*message GetUserGrpcRequest {
+message GetUserGrpcRequest {
 	string login = 1;
 }
 
@@ -55,7 +56,7 @@ message GetUserGrpcResponse {
 	string groups = 4;
 	string chanels = 5;
 	string error = 6;
-}*/
+}
 
 message DeleteUserGrpcRequest {
 	string userId = 1;

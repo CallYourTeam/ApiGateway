@@ -8,12 +8,17 @@ namespace ApiGateway.Services
 
         public async Task<AuthenticationUserGrpcResponse> AuthenticateUserAsync(string login, string password)
         {
-            return await _client.AuthenticationtUserAsync(new AuthenticationUserGrpcRequest { Login = login, Password = password });
+            return await _client.AuthenticationUserAsync(new AuthenticationUserGrpcRequest { Login = login, Password = password });
         }
 
         public async Task<DeleteUserGrpcResponse> DeleteUserAsync(Guid userId, string password)
         {
             return await _client.DeleteUserAsync(new DeleteUserGrpcRequest { UserId = userId.ToString(), Password = password });
+        }
+
+        public async Task<GetUserGrpcResponse> GetUserAsync(string login)
+        {
+            return await _client.GetUserAsync(new GetUserGrpcRequest { Login = login });
         }
 
         public async Task<RegisterUserGrpcResponse> RegisterUserAsync(string login, string email, string password)

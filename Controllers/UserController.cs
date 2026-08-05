@@ -3,6 +3,7 @@ using ApiGateway.Jwt;
 using ApiGateway.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UtilsModule;
 
 namespace ApiGateway.Controllers
 {
@@ -69,6 +70,26 @@ namespace ApiGateway.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpGet("get")]
+        [Authorize]
+        public async Task<IActionResult> GetUser([FromQuery] string login)
+        {
+            var grpcResponse = await _userService.GetUserAsync(login);
+
+            if (grpcResponse.Error.Length != 0)
+            {
+                return BadRequest(grpcResponse.Error);
+            }
+
+            return Ok(new UserGetResponse(
+                grpcResponse.Login,
+                DateTime.Parse(grpcResponse.RegisterationDate),
+                Utils.StringToList(grpcResponse.Friends, Guid.Parse),
+                Utils.StringToList(grpcResponse.Groups, Guid.Parse),
+                Utils.StringToList(grpcResponse.Chanels, Guid.Parse)
+            ));
         }
     }
 }

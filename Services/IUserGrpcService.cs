@@ -6,5 +6,6 @@
         Task<AuthenticationUserGrpcResponse> AuthenticateUserAsync(string login, string password);
         Task<UpdateUserGrpcResponse> UpdateUserAsync(Guid userId, string login, string email, string password, List<Guid> friends, List<Guid> groups, List<Guid> chanels);
         Task<DeleteUserGrpcResponse> DeleteUserAsync(Guid userId, string password);
+        Task<GetUserGrpcResponse> GetUserAsync(string login);
     }
 }
